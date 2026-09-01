@@ -1,0 +1,1950 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Corner We Always End Up At</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@300;400;500;600&family=Caveat:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream: #f5ede0;
+        --paper: #fbf6ec;
+        --ink: #2c241c;
+        --ink-soft: #4a4038;
+        --maroon: #7c2635;
+        --rose: #b23a4c;
+        --rose-soft: #e3a3ac;
+        --olive: #6e7a4e;
+        --olive-dark: #454f2c;
+        --sand: #c99a5b;
+        --line: #d8c9ab;
+        --shadow: 0 18px 40px -18px rgba(44, 36, 28, 0.35);
+        --shadow-soft: 0 10px 24px -14px rgba(44, 36, 28, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      body {
+        margin: 0;
+        position: relative;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: "Work Sans", sans-serif;
+        font-weight: 400;
+        overflow-x: hidden;
+        background-image:
+          radial-gradient(
+            circle at 8% 12%,
+            rgba(201, 154, 91, 0.1),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 92% 30%,
+            rgba(110, 122, 78, 0.08),
+            transparent 45%
+          );
+      }
+      body > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .ambient-scene {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: 0.9;
+      }
+      .ambient-layer {
+        position: absolute;
+        inset: -8% -5% -5% -5%;
+      }
+      .rose-petal {
+        position: absolute;
+        left: var(--left);
+        top: -18vh;
+        width: var(--size);
+        height: calc(var(--size) * 1.4);
+        opacity: 0;
+        border-radius: 70% 0 70% 0;
+        background: linear-gradient(
+          135deg,
+          rgba(178, 58, 76, 0.6),
+          rgba(178, 58, 76, 0.18)
+        );
+        box-shadow: inset 0 0 0 1px rgba(124, 38, 53, 0.25);
+        transform: rotate(var(--rotate));
+        animation: fallPetal var(--duration) linear infinite;
+        animation-delay: var(--delay);
+      }
+      .rose-petal::before {
+        content: "";
+        position: absolute;
+        inset: 18% 28% 12% 28%;
+        border-radius: 50% 50% 65% 65%;
+        background: rgba(255, 255, 255, 0.14);
+      }
+      .rose-petal:nth-child(odd) {
+        background: linear-gradient(
+          135deg,
+          rgba(192, 93, 110, 0.6),
+          rgba(178, 58, 76, 0.14)
+        );
+      }
+      .rose-petal:nth-child(3n) {
+        width: calc(var(--size) * 0.8);
+        height: calc(var(--size) * 1.15);
+      }
+      .heart-orb {
+        position: absolute;
+        left: var(--left);
+        bottom: -18vh;
+        width: var(--size);
+        height: var(--size);
+        transform: rotate(-45deg) scale(0.75);
+        opacity: 0;
+        animation: floatHeart var(--duration) ease-in-out infinite;
+        animation-delay: var(--delay);
+      }
+      .heart-orb::before,
+      .heart-orb::after {
+        content: "";
+        position: absolute;
+        width: var(--size);
+        height: var(--size);
+        border-radius: 50%;
+        background: rgba(178, 58, 76, 0.22);
+        border: 1px solid rgba(178, 58, 76, 0.18);
+      }
+      .heart-orb::before {
+        top: calc(var(--size) * -0.5);
+        left: 0;
+      }
+      .heart-orb::after {
+        left: calc(var(--size) * 0.5);
+        top: 0;
+      }
+      .heart-orb span {
+        position: absolute;
+        inset: 0;
+        background: rgba(178, 58, 76, 0.16);
+        transform: rotate(45deg);
+      }
+      .ambient-cat {
+        position: absolute;
+        width: var(--size);
+        left: var(--left);
+        top: var(--top);
+        opacity: 0.32;
+        animation: catDrift var(--duration) ease-in-out infinite alternate;
+        animation-delay: var(--delay);
+      }
+      .ambient-cat svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .ambient-cat.sleepy {
+        filter: saturate(0.9) brightness(0.98);
+      }
+
+      @keyframes fallPetal {
+        0% {
+          transform: translate3d(0, -10vh, 0) rotate(var(--rotate));
+          opacity: 0;
+        }
+        8% {
+          opacity: var(--opacity);
+        }
+        35% {
+          transform: translate3d(var(--drift), 18vh, 0) rotate(calc(var(--rotate) + 30deg));
+          opacity: var(--opacity);
+        }
+        65% {
+          transform: translate3d(calc(var(--drift) * -0.7), 52vh, 0) rotate(calc(var(--rotate) + 95deg));
+          opacity: calc(var(--opacity) * 0.9);
+        }
+        100% {
+          transform: translate3d(calc(var(--drift) * 0.8), 100vh, 0) rotate(calc(var(--rotate) + 175deg));
+          opacity: 0;
+        }
+      }
+      @keyframes floatHeart {
+        0% {
+          transform: translate3d(0, 0, 0) rotate(-45deg) scale(0.7);
+          opacity: 0;
+        }
+        15% {
+          opacity: 0.8;
+        }
+        50% {
+          transform: translate3d(var(--drift), -30vh, 0) rotate(-20deg) scale(1);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translate3d(calc(var(--drift) * -0.8), -70vh, 0) rotate(-55deg) scale(0.8);
+          opacity: 0;
+        }
+      }
+      @keyframes catDrift {
+        0% {
+          transform: translate3d(0, 0, 0) scale(0.95);
+          opacity: 0.18;
+        }
+        50% {
+          transform: translate3d(var(--drift), 14px, 0) scale(1);
+          opacity: 0.32;
+        }
+        100% {
+          transform: translate3d(calc(var(--drift) * -0.8), -8px, 0) scale(0.96);
+          opacity: 0.2;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .ambient-scene {
+          opacity: 0.75;
+        }
+        .rose-petal {
+          filter: saturate(0.9);
+        }
+        .ambient-cat {
+          opacity: 0.2;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ambient-scene {
+          display: none;
+        }
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        margin: 0;
+        color: var(--ink);
+      }
+      .script {
+        font-family: "Caveat", cursive;
+        color: var(--maroon);
+      }
+      a {
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      button {
+        font-family: inherit;
+      }
+
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 28px;
+      }
+
+      [data-open-lightbox] {
+        cursor: default;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid var(--maroon);
+        outline-offset: 3px;
+      }
+
+      /* =====================================================
+   CAT SVG SHARED STYLE
+===================================================== */
+      .cat-body {
+        fill: var(--paper);
+        stroke: var(--ink);
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .cat-body-alt {
+        fill: var(--cream);
+        stroke: var(--maroon);
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .cat-mark {
+        stroke: var(--ink);
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        fill: none;
+      }
+      .cat-mark-maroon {
+        stroke: var(--maroon);
+      }
+      .cat-pupil {
+        fill: var(--ink);
+      }
+      .cat-blush {
+        fill: var(--rose-soft);
+        opacity: 0.6;
+      }
+      .cat-inner-ear {
+        fill: var(--rose-soft);
+        opacity: 0.55;
+      }
+
+      /* =====================================================
+   MEMORY INDEX (desktop only)
+===================================================== */
+      .memory-index {
+        position: fixed;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+      }
+      .memory-index.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .memory-index button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1.5px solid var(--sand);
+        padding: 0;
+        cursor: pointer;
+        position: relative;
+        transition:
+          background 0.3s ease,
+          transform 0.3s ease;
+      }
+      .memory-index button.active {
+        background: var(--maroon);
+        border-color: var(--maroon);
+        transform: scale(1.25);
+      }
+      .memory-index button .tip {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        font-family: "Caveat", cursive;
+        font-size: 16px;
+        color: var(--ink-soft);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+      .memory-index button:hover .tip,
+      .memory-index button:focus-visible .tip {
+        opacity: 1;
+      }
+
+      @media (max-width: 900px) {
+        .memory-index {
+          display: none;
+        }
+      }
+
+      /* =====================================================
+   EDGE CAT ENCOUNTER ENGINE
+===================================================== */
+      .edge-cat {
+        position: fixed;
+        z-index: 55;
+        pointer-events: none;
+        transition:
+          transform 0.85s cubic-bezier(0.22, 0.9, 0.28, 1),
+          opacity 0.6s ease;
+        opacity: 0;
+      }
+      .edge-cat svg {
+        display: block;
+      }
+
+      .edge-cat-left {
+        left: -2px;
+        top: 38%;
+        width: 86px;
+        transform: translateX(-100%);
+      }
+      .edge-cat-left.show {
+        transform: translateX(-14%);
+        opacity: 1;
+      }
+
+      .edge-cat-right {
+        right: -2px;
+        top: 52%;
+        width: 86px;
+        transform: translateX(100%) scaleX(-1);
+      }
+      .edge-cat-right.show {
+        transform: translateX(14%) scaleX(-1);
+        opacity: 1;
+      }
+
+      .edge-cat-bottom {
+        left: 8%;
+        bottom: -2px;
+        width: 96px;
+        transform: translateY(100%);
+      }
+      .edge-cat-bottom.show {
+        transform: translateY(28%);
+        opacity: 1;
+      }
+
+      @media (max-width: 640px) {
+        .edge-cat-left,
+        .edge-cat-right {
+          width: 64px;
+        }
+        .edge-cat-bottom {
+          width: 72px;
+        }
+      }
+
+      .runner-cat {
+        position: fixed;
+        bottom: 6%;
+        left: -140px;
+        width: 80px;
+        z-index: 56;
+        pointer-events: none;
+        opacity: 0;
+      }
+      .runner-cat.run {
+        animation: runAcross 3.2s linear forwards;
+      }
+      @keyframes runAcross {
+        0% {
+          left: -140px;
+          opacity: 0;
+        }
+        8% {
+          opacity: 1;
+        }
+        92% {
+          opacity: 1;
+        }
+        100% {
+          left: 110%;
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .edge-cat,
+        .runner-cat {
+          display: none;
+        }
+      }
+
+      /* =====================================================
+   REVEAL ON SCROLL
+===================================================== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+          transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* =====================================================
+   ENTRANCE
+===================================================== */
+      .entrance {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 120px 28px 80px;
+        overflow: hidden;
+      }
+      .entrance-tree {
+        position: absolute;
+        left: -40px;
+        top: 0;
+        height: 100%;
+        width: 220px;
+        opacity: 0.9;
+        pointer-events: none;
+      }
+      @media (max-width: 780px) {
+        .entrance-tree {
+          width: 120px;
+          left: -60px;
+          opacity: 0.6;
+        }
+      }
+
+      .entrance-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1.05fr 0.6fr;
+        gap: 40px;
+        align-items: center;
+        max-width: 900px;
+        margin-left: 6%;
+      }
+      @media (max-width: 860px) {
+        .entrance-inner {
+          grid-template-columns: 1fr;
+          margin-left: 0;
+          gap: 30px;
+        }
+      }
+
+      .eyebrow-note {
+        font-family: "Caveat", cursive;
+        font-size: 22px;
+        color: var(--maroon);
+        transform: rotate(-2deg);
+        display: inline-block;
+        margin-bottom: 6px;
+      }
+      .entrance h1 {
+        font-size: clamp(38px, 6.4vw, 68px);
+        line-height: 1.08;
+        font-style: italic;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+      .entrance p.sub {
+        margin-top: 20px;
+        font-size: 17.5px;
+        line-height: 1.65;
+        color: var(--ink-soft);
+        max-width: 440px;
+      }
+
+      .hero-frame {
+        position: relative;
+        background: var(--paper);
+        padding: 12px 12px 40px;
+        box-shadow: var(--shadow);
+        transform: rotate(2deg);
+        width: min(280px, 100%);
+        justify-self: center;
+      }
+      .hero-frame img {
+        width: 100%;
+      }
+      .hero-frame figcaption {
+        font-family: "Caveat", cursive;
+        font-size: 18px;
+        color: var(--ink-soft);
+        text-align: center;
+        margin-top: 10px;
+      }
+      .hero-cat {
+        position: absolute;
+        width: 92px;
+        left: -40px;
+        bottom: 8px;
+        z-index: 3;
+      }
+      @media (max-width: 640px) {
+        .hero-cat {
+          width: 68px;
+          left: -24px;
+          bottom: 4px;
+        }
+      }
+      .hero-cat .eyes-closed {
+        opacity: 1;
+        transition: opacity 0.6s ease;
+      }
+      .hero-cat .eyes-open {
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .hero-cat.awake .eyes-closed {
+        opacity: 0;
+      }
+      .hero-cat.awake .eyes-open {
+        opacity: 1;
+      }
+
+      .scroll-cue {
+        position: absolute;
+        bottom: 34px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink-soft);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+      }
+      .scroll-cue .paw {
+        width: 16px;
+        height: 16px;
+        animation: pawbounce 1.8s ease-in-out infinite;
+      }
+      @keyframes pawbounce {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.5;
+        }
+        50% {
+          transform: translateY(8px);
+          opacity: 1;
+        }
+      }
+
+      /* =====================================================
+   INTRO
+===================================================== */
+      .intro {
+        padding: 80px 0 40px;
+      }
+      .intro .wrap {
+        max-width: 640px;
+        text-align: left;
+      }
+      .intro h2 {
+        font-size: clamp(26px, 3.8vw, 34px);
+        font-style: italic;
+        line-height: 1.3;
+        max-width: 480px;
+      }
+      .intro p {
+        margin-top: 16px;
+        font-size: 16.5px;
+        line-height: 1.75;
+        color: var(--ink-soft);
+        max-width: 480px;
+      }
+
+      /* =====================================================
+   GALLERY / MEMORIES
+===================================================== */
+      .gallery {
+        padding: 20px 0 90px;
+      }
+
+      .memory {
+        padding: 70px 0;
+        position: relative;
+      }
+      .memory:first-of-type {
+        padding-top: 20px;
+      }
+
+      .memory-wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 28px;
+        position: relative;
+      }
+
+      .memory-photo-btn {
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        display: block;
+        width: 100%;
+        text-align: left;
+      }
+      .memory-visual {
+        position: relative;
+      }
+
+      .memory-frame {
+        position: relative;
+        background: var(--paper);
+        box-shadow: var(--shadow-soft);
+        padding: 12px 12px 44px;
+        transition:
+          transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1),
+          box-shadow 0.5s ease;
+      }
+      .memory.open .memory-frame {
+        box-shadow: var(--shadow);
+      }
+
+      .memory-frame img {
+        width: 100%;
+        display: block;
+      }
+
+      .memory-frame figcaption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-top: 12px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .memory-frame .m-title {
+        font-family: "Caveat", cursive;
+        font-size: 20px;
+        color: var(--maroon);
+      }
+      .memory-frame .m-index {
+        font-size: 12px;
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+      }
+
+      .memory-frame .hint {
+        position: absolute;
+        bottom: 10px;
+        right: 14px;
+        font-family: "Caveat", cursive;
+        font-size: 14px;
+        color: var(--ink-soft);
+        opacity: 0.55;
+      }
+
+      /* varied sizes / tilts per memory, kept mild for readability */
+      .m-size-lg .memory-frame {
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .m-size-md .memory-frame {
+        max-width: 460px;
+      }
+      .m-align-left .memory-frame {
+        margin-left: 0;
+      }
+      .m-align-right .memory-frame {
+        margin-left: auto;
+      }
+      .m-tilt-1 .memory-frame {
+        transform: rotate(-1.4deg);
+      }
+      .m-tilt-2 .memory-frame {
+        transform: rotate(1.2deg);
+      }
+      .memory.open .m-tilt-1 .memory-frame,
+      .memory.open .m-tilt-2 .memory-frame {
+        transform: rotate(0deg) scale(1.015);
+      }
+
+      /* ---------- letter panel (grid-rows accordion) ---------- */
+      .letter-panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.65s cubic-bezier(0.2, 0.8, 0.25, 1);
+      }
+      .letter-panel.row-open {
+        grid-template-rows: 1fr;
+      }
+      .letter-inner {
+        overflow: hidden;
+        min-height: 0;
+      }
+      .letter-card {
+        margin-top: 26px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-soft);
+        padding: 30px 30px 26px;
+        position: relative;
+        max-width: 560px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.6s ease 0.15s,
+          transform 0.6s ease 0.15s;
+      }
+      .memory.open .letter-card {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .m-align-right .letter-card {
+        margin-left: auto;
+      }
+
+      .letter-cat {
+        position: absolute;
+        width: 66px;
+        top: -30px;
+        right: 24px;
+      }
+
+      .letter-card h4 {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 21px;
+        margin-bottom: 10px;
+        padding-right: 50px;
+      }
+      .letter-card p {
+        font-size: 15.5px;
+        line-height: 1.75;
+        color: var(--ink-soft);
+        margin: 0;
+      }
+      .letter-card p.placeholder-cue {
+        font-style: italic;
+        color: var(--sand);
+      }
+      .letter-meta {
+        margin-top: 16px;
+        font-family: "Caveat", cursive;
+        font-size: 17px;
+        color: var(--maroon);
+      }
+
+      .capsule-nav {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        border-top: 1px dashed var(--line);
+        padding-top: 14px;
+      }
+      .capsule-nav button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        padding: 6px 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s ease;
+      }
+      .capsule-nav button:hover {
+        color: var(--maroon);
+      }
+      .capsule-nav button:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .capsule-nav button.next {
+        margin-left: auto;
+      }
+
+      @media (max-width: 640px) {
+        .memory {
+          padding: 52px 0;
+        }
+        .letter-card {
+          padding: 22px 20px 20px;
+          max-width: 100%;
+        }
+        .letter-cat {
+          width: 52px;
+          top: -24px;
+          right: 16px;
+        }
+      }
+
+      /* =====================================================
+   HIDDEN EASTER-EGG CATS (shy)
+===================================================== */
+      .shy-cat {
+        position: absolute;
+        cursor: pointer;
+        width: 56px;
+        opacity: 0;
+        transform: translateY(10px) scale(0.85);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s cubic-bezier(0.2, 1.3, 0.4, 1);
+      }
+      .shy-cat.revealed {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      .shy-cat:not(.revealed) {
+        opacity: 0.02;
+      } /* keep discoverable via focus for a11y, but visually near-invisible */
+
+      /* =====================================================
+   QUIET SPACE / DIVIDER
+===================================================== */
+      .quiet-space {
+        height: 40px;
+      }
+      @media (max-width: 640px) {
+        .quiet-space {
+          height: 24px;
+        }
+      }
+
+      /* =====================================================
+   FOOTER
+===================================================== */
+      .footer {
+        padding: 100px 0 90px;
+        text-align: center;
+        position: relative;
+      }
+      .footer h2 {
+        font-size: clamp(26px, 4vw, 38px);
+        font-style: italic;
+        max-width: 520px;
+        margin: 0 auto;
+        line-height: 1.3;
+      }
+      .footer p.script {
+        font-size: 21px;
+        margin-top: 18px;
+      }
+      .footer-cat {
+        width: 130px;
+        margin: 32px auto 0;
+      }
+      .footer-note {
+        margin-top: 30px;
+        font-size: 13px;
+        color: var(--ink-soft);
+        opacity: 0.75;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-scene" id="ambientScene" aria-hidden="true">
+      <div class="ambient-layer" id="roseLayer"></div>
+      <div class="ambient-layer" id="heartLayer"></div>
+      <div class="ambient-layer" id="catLayer"></div>
+    </div>
+
+    <!-- ============ MEMORY INDEX (desktop) ============ -->
+    <nav class="memory-index" id="memoryIndex" aria-label="Jump to a memory">
+      <!-- buttons injected by JS -->
+    </nav>
+
+    <!-- ============ EDGE CAT ENCOUNTER LAYER ============ -->
+    <div
+      class="edge-cat edge-cat-left"
+      id="edgeCatLeft"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="edge-cat edge-cat-right"
+      id="edgeCatRight"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="edge-cat edge-cat-bottom"
+      id="edgeCatBottom"
+      aria-hidden="true"
+    ></div>
+    <div class="runner-cat" id="runnerCat" aria-hidden="true">
+      <svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+        <path
+          class="cat-body"
+          d="M14 62c-4-16 8-24 24-22 10 1 14-6 24-6 12 0 16 8 26 8 12 0 18-8 28-4 8 3 10 14 6 24-14 8-96 8-108 0z"
+        />
+        <path d="M40 40 L34 22 L48 38Z" class="cat-body" />
+        <path d="M64 36 L70 16 L80 36Z" class="cat-body" />
+        <circle cx="52" cy="44" r="2" class="cat-pupil" />
+        <circle cx="66" cy="44" r="2" class="cat-pupil" />
+        <path d="M56 50 q4 3 8 0" class="cat-mark" />
+        <path d="M110 46 C122 40 130 44 134 52" class="cat-mark" />
+        <path
+          d="M18 62 L10 70M30 64 L24 72M96 64 L100 72M110 62 L118 70"
+          class="cat-mark"
+          stroke-width="2.4"
+        />
+      </svg>
+    </div>
+
+    <!-- ============ ENTRANCE ============ -->
+    <header class="entrance">
+      <svg
+        class="entrance-tree"
+        viewBox="0 0 220 900"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M70 900 C60 760 90 700 66 600 C46 520 96 460 74 380 C56 310 100 260 82 180 C68 120 100 70 90 0"
+          fill="none"
+          stroke="#c99a5b"
+          stroke-width="26"
+          stroke-linecap="round"
+          opacity="0.35"
+        />
+        <path
+          d="M70 900 C60 760 90 700 66 600 C46 520 96 460 74 380 C56 310 100 260 82 180 C68 120 100 70 90 0"
+          fill="none"
+          stroke="#6e7a4e"
+          stroke-width="3"
+          stroke-linecap="round"
+          opacity="0.5"
+        />
+        <path
+          d="M90 260 C130 240 150 200 178 190"
+          fill="none"
+          stroke="#6e7a4e"
+          stroke-width="3"
+          opacity="0.4"
+        />
+        <path
+          d="M80 420 C40 400 30 360 4 350"
+          fill="none"
+          stroke="#6e7a4e"
+          stroke-width="3"
+          opacity="0.4"
+        />
+      </svg>
+
+      <div class="entrance-inner">
+        <div class="entrance-copy">
+          <span class="eyebrow-note">مش ويبسايت للجيم ده يعبيطه ههههه</span>
+          <h1>Our<br />Gallery</h1>
+          <p class="sub">
+          سامحيني على شكل القطط والنبي
+          </p>
+        </div>
+        <figure class="hero-frame">
+          <img
+            src="photos/hero.jpg"
+            alt="Standing together on our usual street, cars and trees behind us."
+            loading="eager"
+          />
+          <figcaption>الله احلى صوره</figcaption>
+          <div class="hero-cat" id="heroCat" aria-hidden="true">
+            <svg viewBox="0 0 140 110" xmlns="http://www.w3.org/2000/svg">
+              <path
+                class="cat-body"
+                d="M10 96c-6-30 14-52 46-52 32 0 52 22 46 52-6 10-86 10-92 0z"
+              />
+              <path d="M34 50 L26 30 L44 48Z" class="cat-body" />
+              <path d="M96 50 L106 28 L114 48Z" class="cat-body" />
+              <g class="eyes-closed">
+                <path d="M46 66 q6 6 12 0" class="cat-mark" />
+                <path d="M78 66 q6 6 12 0" class="cat-mark" />
+              </g>
+              <g class="eyes-open">
+                <circle cx="52" cy="66" r="2.4" class="cat-pupil" />
+                <circle cx="86" cy="66" r="2.4" class="cat-pupil" />
+              </g>
+              <path d="M64 74 q4 3 8 0" class="cat-mark" />
+              <ellipse cx="30" cy="92" rx="9" ry="6" class="cat-body" />
+              <ellipse cx="108" cy="92" rx="9" ry="6" class="cat-body" />
+            </svg>
+          </div>
+        </figure>
+      </div>
+
+      <div class="scroll-cue">
+        <span>كملي تحت يكوفته</span>
+        <svg
+          class="paw"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 3v15M6 11l6 7 6-7"
+            stroke="#4a4038"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </header>
+
+    <!-- ============ INTRO ============ -->
+    <section class="intro reveal">
+      <div class="wrap">
+        <h2>حقيقي مش عارف ايه اللي انا عملته ده , بس ده اللي جه فبالي</h2>
+        <p>
+          كل صوره من دول تحتيها ظرف , متنسيش تدوسي عالصور عشان تشوفيها (تعبت وانا بفكر اكتب ايه)
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <main class="gallery">
+      <!-- MEMORY 1 -->
+      <article
+        class="memory m-size-lg m-align-left m-tilt-1"
+        id="memory-1"
+        data-title="Our usual walk"
+      >
+        <div class="memory-wrap">
+          <button
+            class="memory-photo-btn"
+            aria-expanded="false"
+            aria-controls="letter-1"
+          >
+            <div class="memory-frame">
+              <img
+                src="photos/memory-1.jpg"
+                alt="Walking together on our usual street."
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="m-title">يخلاثوثوثوثوثلخلولخالخبخبنثبنخي</span>
+                <span class="m-index">memory 01</span>
+              </figcaption>
+              <span class="hint">دوسي هنااااا</span>
+            </div>
+          </button>
+          <div class="letter-panel" id="letter-1">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      class="cat-body-alt"
+                      d="M10 80c-4-22 10-38 34-38s38 16 34 38c-6 8-62 8-68 0z"
+                    />
+                    <path d="M26 42 L20 26 L36 40Z" class="cat-body-alt" />
+                    <path d="M68 42 L76 24 L82 40Z" class="cat-body-alt" />
+                    <circle cx="38" cy="56" r="2.2" class="cat-pupil" />
+                    <circle cx="58" cy="56" r="2.2" class="cat-pupil" />
+                    <path
+                      d="M46 64 q4 3 8 0"
+                      class="cat-mark cat-mark-maroon"
+                    />
+                  </svg>
+                </div>
+                <h4>الصوره دي كل ما اشوفها اضحك خخخخ</h4>
+                <p>
+                  كل شويه تظهرلي فالميموريز وافتحها اقول الله يلعنميتيناهلك
+                </p>
+    
+                <div class="capsule-nav">
+                  <button class="prev" disabled>‹ previous</button>
+                  <button class="next">next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="quiet-space" aria-hidden="true"></div>
+
+      <!-- MEMORY 2 -->
+      <article
+        class="memory m-size-md m-align-right m-tilt-2"
+        id="memory-2"
+        data-title="Right under this tree"
+      >
+        <div class="memory-wrap">
+          <div class="memory-visual">
+            <button
+              class="memory-photo-btn"
+              aria-expanded="false"
+              aria-controls="letter-2"
+            >
+              <div class="memory-frame">
+                <img
+                  src="photos/memory-2.jpg"
+                  alt="Standing close together under a tree in warm light."
+                  loading="lazy"
+                />
+                <figcaption>
+                  <span class="m-title">احاحاحااحاحاحاحاح</span>
+                  <span class="m-index">memory 02</span>
+                </figcaption>
+                <span class="hint">دوسي هنا برضو</span>
+              </div>
+            </button>
+            <div
+              class="shy-cat"
+              data-shy="1"
+              style="left: -30px; top: 60%"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 90 70" xmlns="http://www.w3.org/2000/svg">
+                <path class="cat-body" d="M6 66c0-18 14-30 30-30s30 12 30 30" />
+                <path d="M18 40 L22 22 L34 42Z" class="cat-body" />
+                <path d="M52 42 L62 20 L68 40Z" class="cat-body" />
+                <circle cx="30" cy="52" r="2" class="cat-pupil" />
+                <circle cx="50" cy="52" r="2" class="cat-pupil" />
+                <ellipse class="cat-blush" cx="24" cy="58" rx="4" ry="2.4" />
+                <ellipse class="cat-blush" cx="56" cy="58" rx="4" ry="2.4" />
+              </svg>
+            </div>
+          </div>
+          <div class="letter-panel" id="letter-2">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="rotate(-8 50 50)">
+                      <path
+                        class="cat-body-alt"
+                        d="M10 80c-4-22 10-38 34-38s38 16 34 38c-6 8-62 8-68 0z"
+                      />
+                      <path d="M22 40 L14 22 L34 38Z" class="cat-body-alt" />
+                      <path d="M70 40 L80 22 L84 38Z" class="cat-body-alt" />
+                      <circle cx="38" cy="56" r="2.6" class="cat-pupil" />
+                      <circle cx="58" cy="56" r="2.6" class="cat-pupil" />
+                      <path
+                        d="M46 64 q4 3 8 0"
+                        class="cat-mark cat-mark-maroon"
+                      />
+                    </g>
+                  </svg>
+                </div>
+                <h4>ميتين ام الحلاوه</h4>
+                <p>
+                  عارف انك مش بتحبي الصوره دي بس انتي طيز عشان حلوه فشخ وربنا وهحطها عافيه
+                </p>
+             
+                <div class="letter-meta">ميتين ام الحلاوه تاني</div>
+                <div class="capsule-nav">
+                  <button class="prev">‹ previous</button>
+                  <button class="next">next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="quiet-space" aria-hidden="true"></div>
+
+      <!-- MEMORY 3 -->
+      <article
+        class="memory m-size-md m-align-left m-tilt-1"
+        id="memory-3"
+        data-title="Being ridiculous, together"
+      >
+        <div class="memory-wrap">
+          <button
+            class="memory-photo-btn"
+            aria-expanded="false"
+            aria-controls="letter-3"
+          >
+            <div class="memory-frame">
+              <img
+                src="photos/memory-3.jpg"
+                alt="Playful selfie with a cartoon dog-face filter."
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="m-title">خخخخخخخخ</span>
+                <span class="m-index">memory 03</span>
+              </figcaption>
+              <span class="hint">مش محتاج اقولك يعني</span>
+            </div>
+          </button>
+          <div class="letter-panel" id="letter-3">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      class="cat-body-alt"
+                      d="M8 78c-2-8 2-14 10-16 4-8 12-4 16-10 6-8 16-6 22 0 4 6 12 2 16 10 8 2 12 8 10 16-4 6-70 6-74 0z"
+                    />
+                    <path d="M28 40 L20 22 L38 38Z" class="cat-body-alt" />
+                    <path d="M74 38 L86 18 L92 40Z" class="cat-body-alt" />
+                    <circle cx="40" cy="54" r="2.4" class="cat-pupil" />
+                    <circle cx="64" cy="54" r="2.4" class="cat-pupil" />
+                    <ellipse
+                      cx="52"
+                      cy="64"
+                      rx="4"
+                      ry="3"
+                      class="cat-mark cat-mark-maroon"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+                <h4>يجد مش عارف حطيتها ليه</h4>
+                <p>
+                    هعلقها في اوضتي هههههه
+                </p>
+        
+                <div class="letter-meta">
+                    بحبك
+                </div>
+                <div class="capsule-nav">
+                  <button class="prev">‹ previous</button>
+                  <button class="next">next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="quiet-space" aria-hidden="true"></div>
+
+      <!-- MEMORY 4 -->
+      <article
+        class="memory m-size-md m-align-right m-tilt-2"
+        id="memory-4"
+        data-title="Caught mid-laugh"
+      >
+        <div class="memory-wrap">
+          <button
+            class="memory-photo-btn"
+            aria-expanded="false"
+            aria-controls="letter-4"
+          >
+            <div class="memory-frame">
+              <img
+                src="photos/memory-4.jpg"
+                alt="A candid, tilted selfie under a tree branch."
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="m-title">صورة خطوبتنا وربنا</span>
+                <span class="m-index">memory 04</span>
+              </figcaption>
+              <span class="hint">لا خلاص طيزك بقى (بهزر يروحي دوسي)</span>
+            </div>
+          </button>
+          <div class="letter-panel" id="letter-4">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      class="cat-body-alt"
+                      d="M10 84c-4-22 10-38 34-38s38 16 34 38c-6 8-62 8-68 0z"
+                    />
+                    <path d="M26 46 L20 30 L36 44Z" class="cat-body-alt" />
+                    <path d="M68 46 L76 28 L82 44Z" class="cat-body-alt" />
+                    <circle cx="38" cy="60" r="2.2" class="cat-pupil" />
+                    <circle cx="58" cy="60" r="2.2" class="cat-pupil" />
+                    <path
+                      d="M46 68 q4 3 8 0"
+                      class="cat-mark cat-mark-maroon"
+                    />
+                    <path
+                      d="M48 30 C50 18 54 14 58 8 M52 30 l2 -10 M55 30 l4 -9"
+                      class="cat-mark cat-mark-maroon"
+                      stroke-width="1.8"
+                    />
+                    <circle cx="60" cy="10" r="2.4" class="cat-inner-ear" />
+                    <circle cx="65" cy="16" r="3.2" class="cat-inner-ear" />
+                    <circle cx="70" cy="24" r="4" class="cat-inner-ear" />
+                  </svg>
+                </div>
+                <h4></h4>
+                <p>
+                  خخخخخ وحشتيني يلعنميتيناهلك
+                </p>
+                <p class="placeholder-cue">
+                واكله الجو مني يووووووووه
+                </p>
+                <div class="letter-meta">
+                    بحبك تاني هههه
+                </div>
+                <div class="capsule-nav">
+                  <button class="prev">‹ previous</button>
+                  <button class="next">next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="quiet-space" aria-hidden="true"></div>
+
+      <!-- MEMORY 5 -->
+      <article
+        class="memory m-size-md m-align-left m-tilt-1"
+        id="memory-5"
+        data-title="One more silly one"
+      >
+        <div class="memory-wrap">
+          <div class="memory-visual">
+            <button
+              class="memory-photo-btn"
+              aria-expanded="false"
+              aria-controls="letter-5"
+            >
+              <div class="memory-frame">
+                <img
+                  src="photos/memory-5.jpg"
+                  alt="Another silly filtered selfie under the trees."
+                  loading="lazy"
+                />
+                <figcaption>
+                  <span class="m-title">دي بقى مش عارف حطيتها ليه</span>
+                  <span class="m-index">memory 05</span>
+                </figcaption>
+                <span class="hint">ايوا دوسي هنا</span>
+              </div>
+            </button>
+            <div
+              class="shy-cat"
+              data-shy="2"
+              style="right: -26px; bottom: -18px"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  class="cat-body"
+                  d="M4 58c-2-16 26-24 46-24s48 8 46 24z"
+                />
+                <path d="M20 34 L14 18 L30 32Z" class="cat-body" />
+                <path d="M70 32 L82 16 L86 32Z" class="cat-body" />
+                <path d="M34 46 q6 4 12 0" class="cat-mark" />
+                <path d="M60 46 q6 4 12 0" class="cat-mark" />
+              </svg>
+            </div>
+          </div>
+          <div class="letter-panel" id="letter-5">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      class="cat-body-alt"
+                      d="M10 78c-6-20 26-30 40-30s46 10 40 30c-6 8-74 8-80 0z"
+                    />
+                    <path d="M24 42 L16 24 L36 40Z" class="cat-body-alt" />
+                    <path d="M74 40 L86 22 L88 42Z" class="cat-body-alt" />
+                    <path
+                      d="M36 56 q6 5 12 0"
+                      class="cat-mark cat-mark-maroon"
+                    />
+                    <path
+                      d="M52 56 q6 5 12 0"
+                      class="cat-mark cat-mark-maroon"
+                    />
+                  </svg>
+                </div>
+                <h4>لا فكراني هحب فيكي حلو عليكي كده</h4>
+                <p>
+                 
+                </p>
+                <p class="placeholder-cue">
+                    انا ايه اللي خلاني اعمل البتاع ده
+                </p>
+                <div class="letter-meta">(في سر هقولهولك تحت)</div>
+                <div class="capsule-nav">
+                  <button class="prev">‹ previous</button>
+                  <button class="next">next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="quiet-space" aria-hidden="true"></div>
+
+      <!-- MEMORY 6 — finale -->
+      <article
+        class="memory m-size-lg m-align-right"
+        id="memory-6"
+        data-title="The day of a hundred roses"
+      >
+        <div class="memory-wrap">
+          <button
+            class="memory-photo-btn"
+            aria-expanded="false"
+            aria-controls="letter-6"
+          >
+            <div class="memory-frame">
+              <img
+                src="photos/memory-6.jpg"
+                alt="Holding a huge bouquet of red roses together, matching beanies, laughing."
+                loading="lazy"
+              />
+              <figcaption>
+                <span class="m-title">FOR MY BEAUTIFUL GIRL</span>
+                <span class="m-index">memory 06</span>
+              </figcaption>
+              <span class="hint">tap to open</span>
+            </div>
+          </button>
+          <div class="letter-panel" id="letter-6">
+            <div class="letter-inner">
+              <div class="letter-card">
+                <div class="letter-cat" aria-hidden="true">
+                  <svg viewBox="0 0 110 100" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      class="cat-body-alt"
+                      d="M12 88c-6-24 12-40 38-40s44 16 38 40c-6 9-70 9-76 0z"
+                    />
+                    <path d="M30 46 L22 26 L42 44Z" class="cat-body-alt" />
+                    <path d="M78 44 L88 24 L94 46Z" class="cat-body-alt" />
+                    <circle cx="42" cy="60" r="2.4" class="cat-pupil" />
+                    <circle cx="62" cy="60" r="2.4" class="cat-pupil" />
+                    <path
+                      d="M50 68 q4 3 8 0"
+                      class="cat-mark cat-mark-maroon"
+                    />
+                    <ellipse
+                      cx="48"
+                      cy="80"
+                      rx="10"
+                      ry="7"
+                      class="cat-body-alt"
+                    />
+                    <g transform="translate(46 74)">
+                      <line
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="12"
+                        stroke="#6e7a4e"
+                        stroke-width="1.6"
+                      />
+                      <circle cx="0" cy="-4" r="3" fill="#b23a4c" />
+                      <circle cx="-3.4" cy="-1" r="3" fill="#b23a4c" />
+                      <circle cx="3.4" cy="-1" r="3" fill="#b23a4c" />
+                      <circle cx="0" cy="1.8" r="3" fill="#b23a4c" />
+                      <circle cx="0" cy="-1" r="2" fill="#e8c15a" />
+                    </g>
+                  </svg>
+                </div>
+                <h4>This one for you</h4>
+                <p>
+                 i don't know even know where to start , i am really grateful for being in my life , for all the love and care you give me , for all the fun and laughs we share , sometimes we don't talk much , sometimes we think we might end up not together , but there is times all i want is to make family with you , to live together , to be with each other , i love you so much and i hope you like what i made for you , it is really simple but i hope our memories get more so our love to each other.
+                </p>
+                <p class="placeholder-cue">
+                  this is not me for real (بحبك يفاطمه)
+                </p>
+                <div class="capsule-nav">
+                  <button class="prev">‹ previous</button>
+                  <button class="next" disabled>next memory ›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer reveal">
+      <div class="wrap">
+        <h2>
+        حاطتها  wallpaper  الصورة دي للشات  وصحابي اتريقوا عليا بس طيزهم هسيبها برضو هههه
+        </h2>
+        <p class="script">قولتلك بحبك؟ اصل ذاكرتي سمكيه (بحبك)</p>
+        <div class="footer-cat" aria-hidden="true">
+          <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg">
+            <path
+              class="cat-body"
+              d="M14 150c-10-40 20-70 60-70s70 30 60 70c-8 12-172 12-180 0z"
+              transform="scale(0.98)"
+            />
+            <path d="M40 92 L30 62 L58 88Z" class="cat-body" />
+            <path d="M132 88 L150 58 L158 92Z" class="cat-body" />
+            <path d="M74 116 q10 8 20 0" class="cat-mark" />
+            <path
+              d="M20 108 L-4 100M20 118 L-6 126"
+              class="cat-mark"
+              stroke-width="1.8"
+              opacity="0.6"
+            />
+            <path
+              d="M148 108 L172 100M148 118 L174 126"
+              class="cat-mark"
+              stroke-width="1.8"
+              opacity="0.6"
+            />
+          </svg>
+        </div>
+        <p class="footer-note" id="footerNote">
+            سامحيني تاني على شكل القطط خخخ
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        /* ---------- romantic atmosphere background ---------- */
+        if (!reduceMotion) {
+          var roseLayer = document.getElementById("roseLayer");
+          var heartLayer = document.getElementById("heartLayer");
+          var catLayer = document.getElementById("catLayer");
+
+          function makePetal(index) {
+            var petal = document.createElement("span");
+            petal.className = "rose-petal";
+            var size = 8 + Math.random() * 18;
+            var left = Math.random() * 100;
+            petal.style.setProperty("--size", size + "px");
+            petal.style.setProperty("--left", left + "%");
+            petal.style.setProperty("--duration", (9 + Math.random() * 12) + "s");
+            petal.style.setProperty("--delay", (-Math.random() * 20) + "s");
+            petal.style.setProperty("--drift", (Math.random() * 160 - 80) + "px");
+            petal.style.setProperty("--rotate", (Math.random() * 180 - 90) + "deg");
+            petal.style.setProperty("--opacity", (0.32 + Math.random() * 0.5).toFixed(2));
+            petal.style.zIndex = String(1 + index % 3);
+            roseLayer.appendChild(petal);
+          }
+
+          function makeHeart(index) {
+            var orb = document.createElement("span");
+            orb.className = "heart-orb";
+            orb.innerHTML = "<span></span>";
+            var size = 10 + Math.random() * 18;
+            var left = Math.random() * 100;
+            orb.style.setProperty("--size", size + "px");
+            orb.style.setProperty("--left", left + "%");
+            orb.style.setProperty("--duration", (12 + Math.random() * 18) + "s");
+            orb.style.setProperty("--delay", (-Math.random() * 20) + "s");
+            orb.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
+            orb.style.zIndex = String(2 + (index % 2));
+            heartLayer.appendChild(orb);
+          }
+
+          function makeAmbientCat(index) {
+            var cat = document.createElement("div");
+            cat.className = "ambient-cat " + (index % 2 === 0 ? "sleepy" : "");
+            var themes = [
+              '<svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg"><path class="cat-body" d="M6 64c-4-16 10-28 30-28s34 12 30 28c-6 8-54 8-60 0z"/><path d="M18 38 L12 20 L32 34Z" class="cat-body"/><path d="M60 34 L72 18 L78 34Z" class="cat-body"/><circle cx="30" cy="48" r="2.4" class="cat-pupil"/><circle cx="50" cy="48" r="2.4" class="cat-pupil"/><path d="M38 54 q6 5 12 0" class="cat-mark"/></svg>',
+              '<svg viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg"><path class="cat-body-alt" d="M8 70c-4-18 6-32 28-32s32 14 28 32c-6 8-52 8-56 0z"/><path d="M18 36 L10 18 L28 34Z" class="cat-body-alt"/><path d="M62 36 L76 16 L82 36Z" class="cat-body-alt"/><circle cx="36" cy="50" r="2.1" class="cat-pupil"/><circle cx="58" cy="50" r="2.1" class="cat-pupil"/><path d="M42 58 q8 6 16 0" class="cat-mark cat-mark-maroon"/></svg>',
+              '<svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><path class="cat-body" d="M6 60c0-16 18-28 38-28s38 12 38 28c-8 8-68 8-76 0z"/><path d="M26 30 L20 14 L38 28Z" class="cat-body"/><path d="M64 28 L75 12 L82 30Z" class="cat-body"/><circle cx="38" cy="44" r="2" class="cat-pupil"/><circle cx="58" cy="44" r="2" class="cat-pupil"/><path d="M45 50 q5 4 10 0" class="cat-mark"/></svg>'
+            ];
+            cat.innerHTML = themes[index % themes.length];
+            var size = 52 + Math.random() * 88;
+            var left = 6 + Math.random() * 86;
+            var top = 14 + Math.random() * 58;
+            cat.style.setProperty("--size", size + "px");
+            cat.style.setProperty("--left", left + "%");
+            cat.style.setProperty("--top", top + "%");
+            cat.style.setProperty("--duration", (18 + Math.random() * 22) + "s");
+            cat.style.setProperty("--delay", (-Math.random() * 16) + "s");
+            cat.style.setProperty("--drift", (Math.random() * 42 - 21) + "px");
+            cat.style.zIndex = String(3 + (index % 2));
+            catLayer.appendChild(cat);
+          }
+
+          for (var i = 0; i < 26; i++) makePetal(i);
+          for (var j = 0; j < 16; j++) makeHeart(j);
+          for (var k = 0; k < 5; k++) makeAmbientCat(k);
+        }
+
+        /* ---------- scroll reveal ---------- */
+        var revealEls = document.querySelectorAll(".reveal");
+        if ("IntersectionObserver" in window) {
+          var revealIO = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("in");
+                  revealIO.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.12 },
+          );
+          revealEls.forEach(function (el) {
+            revealIO.observe(el);
+          });
+        } else {
+          revealEls.forEach(function (el) {
+            el.classList.add("in");
+          });
+        }
+
+        /* ---------- hero cat wakes up on scroll ---------- */
+        var heroCat = document.getElementById("heroCat");
+        if (heroCat) {
+          var wakeIO = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (!entry.isIntersecting) {
+                  heroCat.classList.add("awake");
+                }
+              });
+            },
+            { threshold: 0, rootMargin: "-30% 0px 0px 0px" },
+          );
+          wakeIO.observe(document.querySelector(".entrance"));
+        }
+
+        /* ---------- memory index nav ---------- */
+        var memories = Array.prototype.slice.call(
+          document.querySelectorAll(".memory"),
+        );
+        var indexNav = document.getElementById("memoryIndex");
+        memories.forEach(function (m, i) {
+          var btn = document.createElement("button");
+          btn.setAttribute(
+            "aria-label",
+            "Go to " + m.getAttribute("data-title"),
+          );
+          var tip = document.createElement("span");
+          tip.className = "tip";
+          tip.textContent = m.getAttribute("data-title");
+          btn.appendChild(tip);
+          btn.addEventListener("click", function () {
+            m.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "center",
+            });
+          });
+          indexNav.appendChild(btn);
+        });
+        var indexButtons = Array.prototype.slice.call(
+          indexNav.querySelectorAll("button"),
+        );
+
+        var navVisIO = new IntersectionObserver(
+          function (entries) {
+            var anyVisible = false;
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) anyVisible = true;
+            });
+            indexNav.classList.toggle("show", anyVisible);
+          },
+          { threshold: 0 },
+        );
+        memories.forEach(function (m) {
+          navVisIO.observe(m);
+        });
+
+        var activeIO = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              var idx = memories.indexOf(entry.target);
+              if (entry.isIntersecting && idx > -1) {
+                indexButtons.forEach(function (b) {
+                  b.classList.remove("active");
+                });
+                indexButtons[idx].classList.add("active");
+              }
+            });
+          },
+          { threshold: 0.5 },
+        );
+        memories.forEach(function (m) {
+          activeIO.observe(m);
+        });
+
+        /* ---------- memory capsule (open/close letters) ---------- */
+        function closeMemory(m) {
+          var btn = m.querySelector(".memory-photo-btn");
+          var panel = m.querySelector(".letter-panel");
+          m.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
+          panel.classList.remove("row-open");
+        }
+
+        function openMemory(m) {
+          memories.forEach(function (other) {
+            if (other !== m) closeMemory(other);
+          });
+          var btn = m.querySelector(".memory-photo-btn");
+          var panel = m.querySelector(".letter-panel");
+          m.classList.add("open");
+          btn.setAttribute("aria-expanded", "true");
+          panel.classList.add("row-open");
+          setTimeout(function () {
+            m.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "start",
+            });
+          }, 60);
+        }
+
+        memories.forEach(function (m, i) {
+          var btn = m.querySelector(".memory-photo-btn");
+          btn.addEventListener("click", function () {
+            if (m.classList.contains("open")) {
+              closeMemory(m);
+            } else {
+              openMemory(m);
+            }
+          });
+
+          var prevBtn = m.querySelector(".capsule-nav .prev");
+          var nextBtn = m.querySelector(".capsule-nav .next");
+          if (prevBtn && !prevBtn.disabled) {
+            prevBtn.addEventListener("click", function () {
+              closeMemory(m);
+              var target = memories[i - 1];
+              if (target) openMemory(target);
+            });
+          }
+          if (nextBtn && !nextBtn.disabled) {
+            nextBtn.addEventListener("click", function () {
+              closeMemory(m);
+              var target = memories[i + 1];
+              if (target) openMemory(target);
+            });
+          }
+        });
+
+        /* ---------- shy easter-egg cats ---------- */
+        document.querySelectorAll(".shy-cat").forEach(function (el) {
+          el.style.pointerEvents = "auto";
+          el.removeAttribute("aria-hidden");
+          el.setAttribute("tabindex", "0");
+          el.setAttribute("role", "button");
+          el.setAttribute("aria-label", "A shy hidden cat");
+          function reveal(e) {
+            e.stopPropagation();
+            el.classList.add("revealed");
+          }
+          el.addEventListener("click", reveal);
+          el.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              reveal(e);
+            }
+          });
+        });
+
+        /* ---------- edge cat encounter engine ---------- */
+        if (!reduceMotion) {
+          var CATS = {
+            curious:
+              '<svg viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">' +
+              '<path class="cat-body" d="M8 74c-4-20 12-34 34-34s38 14 34 34c-6 8-62 8-68 0z"/>' +
+              '<path d="M22 38 L14 20 L34 36Z" class="cat-body"/>' +
+              '<path d="M64 36 L74 16 L80 38Z" class="cat-body"/>' +
+              '<circle cx="36" cy="50" r="2.6" class="cat-pupil"/>' +
+              '<circle cx="56" cy="50" r="2.6" class="cat-pupil"/>' +
+              '<path d="M44 58 q4 3 8 0" class="cat-mark"/></svg>',
+            sleepy:
+              '<svg viewBox="0 0 110 70" xmlns="http://www.w3.org/2000/svg">' +
+              '<path class="cat-body" d="M6 60 C0 42 18 26 42 24 C64 22 66 38 84 34 C104 30 110 44 106 60 Z"/>' +
+              '<path d="M28 30 L20 16 L36 26Z" class="cat-body"/>' +
+              '<path d="M46 24 L48 10 L58 22Z" class="cat-body"/>' +
+              '<path d="M30 36 q4 3 8 0" class="cat-mark"/></svg>',
+            romantic:
+              '<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">' +
+              '<path class="cat-body-alt" d="M8 82c-4-22 10-38 34-38s38 16 34 38c-6 8-62 8-68 0z"/>' +
+              '<path d="M22 42 L14 24 L34 40Z" class="cat-body-alt"/>' +
+              '<path d="M70 40 L80 20 L86 42Z" class="cat-body-alt"/>' +
+              '<circle cx="36" cy="56" r="2.4" class="cat-pupil"/>' +
+              '<circle cx="56" cy="56" r="2.4" class="cat-pupil"/>' +
+              '<g transform="translate(38 72)"><circle cx="0" cy="-3" r="2.6" fill="#b23a4c"/><circle cx="-3" cy="-1" r="2.6" fill="#b23a4c"/><circle cx="3" cy="-1" r="2.6" fill="#b23a4c"/><circle cx="0" cy="1.6" r="2.6" fill="#b23a4c"/><circle cx="0" cy="-1" r="1.6" fill="#e8c15a"/></g></svg>',
+          };
+
+          var edgeLeft = document.getElementById("edgeCatLeft");
+          var edgeRight = document.getElementById("edgeCatRight");
+          var edgeBottom = document.getElementById("edgeCatBottom");
+          var runner = document.getElementById("runnerCat");
+
+          var edgeEls = {
+            left: edgeLeft,
+            right: edgeRight,
+            bottom: edgeBottom,
+          };
+
+          function showEdgeCat(side, catKey, holdMs) {
+            var el = edgeEls[side];
+            if (!el) return;
+            el.innerHTML = CATS[catKey] || CATS.curious;
+            el.classList.add("show");
+            setTimeout(function () {
+              el.classList.remove("show");
+            }, holdMs || 2400);
+          }
+
+          var encounters = [
+            { id: "memory-2", side: "right", cat: "curious", hold: 2400 },
+            { id: "memory-4", side: "left", cat: "romantic", hold: 2600 },
+            { id: "memory-5", side: "bottom", cat: "sleepy", hold: 2800 },
+          ];
+
+          var triggered = {};
+          var encounterIO = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  var conf = encounters.filter(function (c) {
+                    return c.id === entry.target.id;
+                  })[0];
+                  if (conf && !triggered[conf.id]) {
+                    triggered[conf.id] = true;
+                    showEdgeCat(conf.side, conf.cat, conf.hold);
+                  }
+                }
+              });
+            },
+            { threshold: 0.45 },
+          );
+
+          encounters.forEach(function (c) {
+            var el = document.getElementById(c.id);
+            if (el) encounterIO.observe(el);
+          });
+
+          // playful runner cat, once, roughly mid-scroll near memory 3
+          var runnerTriggered = false;
+          var runnerTarget = document.getElementById("memory-3");
+          if (runnerTarget) {
+            var runnerIO = new IntersectionObserver(
+              function (entries) {
+                entries.forEach(function (entry) {
+                  if (entry.isIntersecting && !runnerTriggered) {
+                    runnerTriggered = true;
+                    runner.classList.add("run");
+                  }
+                });
+              },
+              { threshold: 0.5 },
+            );
+            runnerIO.observe(runnerTarget);
+          }
+
+          // final memory: special cat stays a little longer beside the letter (handled inline in HTML already)
+        }
+      })();
+    </script>
+  </body>
+</html>
